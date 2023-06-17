@@ -1,23 +1,41 @@
+const panelEnum = {
+  MENU: 'menu',
+  INICIO: 'inicio',
+  INSTR: 'instr',
+  CREDT: 'credt',
+  LOADING: 'loading',
+};
+
+let currentPanel = panelEnum.MENU;
+
 //Controls
 let muteIcon;
 let unmuteIcon;
-let muteUnmuteBtnX = 565;
-let muteUnmuteBtnY = 15;
-let muteUnmuteBtnW = 20;
-let muteUnmuteBtnH = 20;
+
+let muteUnmuteBtn = {
+  X: 565,
+  Y: 15,
+  W: 20,
+  H: 20,
+};
 
 let playIcon;
 let pauseIcon;
-let pausePlayBtnX = 530;
-let pausePlayBtnY = 15;
-let pausePlayBtnW = 20;
-let pausePlayBtnH = 20;
+
+let pausePlayBtn = {
+  X: 530,
+  Y: 15,
+  W: 20,
+  H: 20,
+};
 
 let isMuted = false;
 let isPlayingBg = true;
 
-let controlPanelX = 520;
-let controlPanelY = 13;
+let controlPanel = {
+  X: 520,
+  Y: 13,
+};
 
 //Soundtrack
 let song;
@@ -35,14 +53,35 @@ let backgroundR = 255;
 let backgroundG = 255;
 let backgroundB = 255;
 
-let btnIniciarX = 180;
-let btnIniciarY = 250;
+let btnIniciar = {
+  X: 180,
+  Y: 250,
+  W: 240,
+  H: 70,
+  text: 'Iniciar',
+  textX: 180 + 120,
+  textY: 250 + 50,
+};
 
-let btnInstrX = 180;
-let btnInstrY = 370;
+let btnInstr = {
+  X: 180,
+  Y: 370,
+  W: 240,
+  H: 70,
+  text: 'Como Jogar',
+  textX: 180 + 120,
+  textY: 370 + 50,
+};
 
-let btnCredtX = 180;
-let btnCredtY = 490;
+let btnCredt = {
+  X: 180,
+  Y: 490,
+  W: 240,
+  H: 70,
+  text: 'Creditos',
+  textX: 180 + 120,
+  textY: 490 + 50,
+};
 
 let menuBtnsCornerRadius = 20;
 
@@ -68,46 +107,77 @@ function setup() {
 }
 
 function draw() {
-  let color1 = color(backgroundR, backgroundG, backgroundB); // Red
-  let color2 = color(backgroundB, backgroundG, backgroundR); // Blue
+  let color1 = color(backgroundR, backgroundG, backgroundB);
+  let color2 = color(backgroundB, backgroundG, backgroundR);
 
-  // Create a linear gradient from top to bottom
-  setGradient(0, 0, width, height, color1, color2);
+  if (currentPanel === panelEnum.MENU) {
+    clear();
+    setGradient(0, 0, width, height, color1, color2);
 
-  //
+    fill(255);
+    textSize(80);
+    textAlign(CENTER);
+    textFont(mainFont);
+    text('Guess The Color', 295, 150);
 
-  fill(255);
-  textSize(80);
-  textAlign(CENTER);
-  textFont(mainFont);
-  text('Guess The Color', 295, 150);
+    rect(controlPanel.X, controlPanel.Y, 70, 25, 10);
 
-  noStroke();
-  rect(controlPanelX, controlPanelY, 70, 25, 10);
+    const pausePlayIcon = isPlayingBg ? pauseIcon : playIcon;
+    const muteUnmuteIcon = isMuted ? unmuteIcon : muteIcon;
 
-  const pausePlayIcon = isPlayingBg ? pauseIcon : playIcon;
-  const muteUnmuteIcon = isMuted ? unmuteIcon : muteIcon;
+    image(
+      pausePlayIcon,
+      pausePlayBtn.X,
+      pausePlayBtn.Y,
+      pausePlayBtn.W,
+      pausePlayBtn.H
+    );
+    image(
+      muteUnmuteIcon,
+      muteUnmuteBtn.X,
+      muteUnmuteBtn.Y,
+      muteUnmuteBtn.W,
+      muteUnmuteBtn.H
+    );
 
-  image(
-    pausePlayIcon,
-    pausePlayBtnX,
-    pausePlayBtnY,
-    pausePlayBtnW,
-    pausePlayBtnH
-  );
-  image(
-    muteUnmuteIcon,
-    muteUnmuteBtnX,
-    muteUnmuteBtnY,
-    muteUnmuteBtnW,
-    muteUnmuteBtnH
-  );
+    fill(255, 255, 255);
+    rect(
+      btnIniciar.X,
+      btnIniciar.Y,
+      btnIniciar.W,
+      btnIniciar.H,
+      menuBtnsCornerRadius
+    );
+    rect(btnInstr.X, btnInstr.Y, btnInstr.W, btnInstr.H, menuBtnsCornerRadius);
+    rect(btnCredt.X, btnCredt.Y, btnCredt.W, btnCredt.H, menuBtnsCornerRadius);
 
-  fill(255, 255, 255);
-  noStroke();
-  rect(btnIniciarX, btnIniciarY, 240, 70, menuBtnsCornerRadius);
-  rect(btnInstrX, btnInstrY, 240, 70, menuBtnsCornerRadius);
-  rect(btnCredtX, btnCredtY, 240, 70, menuBtnsCornerRadius);
+    fill(95, 158, 160);
+    textSize(40);
+    text(btnIniciar.text, btnIniciar.textX, btnIniciar.textY);
+    text(btnInstr.text, btnInstr.textX, btnInstr.textY);
+    text(btnCredt.text, btnCredt.textX, btnCredt.textY);
+  }
+
+  if (currentPanel === panelEnum.INICIO) {
+    clear();
+    background(220);
+    fill(255);
+    text('Tela de Inicio', 300, 300);
+  }
+
+  if (currentPanel === panelEnum.INSTR) {
+    clear();
+    background(220);
+    fill(255);
+    text('Tela de Instrucoes', 300, 300);
+  }
+
+  if (currentPanel === panelEnum.CREDT) {
+    clear();
+    background(220);
+    fill(255);
+    text('Tela de Creditos', 300, 300);
+  }
 }
 
 function myBgBlueComponentLoop() {
@@ -165,10 +235,9 @@ function myBgRedComponentLoop() {
 }
 
 function onSongLoaded() {
-  song.loop(); // Start playing the song
+  song.loop();
 }
 
-// Function to draw a linear gradient
 function setGradient(x, y, w, h, color1, color2) {
   noFill();
   for (let i = y; i <= y + h; i++) {
@@ -182,13 +251,16 @@ function setGradient(x, y, w, h, color1, color2) {
 function mouseClicked() {
   // Detectando clique sobre o botão de pausar a música
   if (
-    mouseX >= muteUnmuteBtnX &&
-    mouseX <= muteUnmuteBtnX + muteUnmuteBtnW &&
-    mouseY >= muteUnmuteBtnY &&
-    mouseY <= muteUnmuteBtnY + muteUnmuteBtnH
+    mouseX >= muteUnmuteBtn.X &&
+    mouseX <= muteUnmuteBtn.X + muteUnmuteBtn.W &&
+    mouseY >= muteUnmuteBtn.Y &&
+    mouseY <= muteUnmuteBtn.Y + muteUnmuteBtn.H
   ) {
     if (isMuted) {
-      song.setVolume(1.0); // Stop the song if it is playing
+      song.setVolume(1.0);
+      if (!song.isPlaying()) {
+        song.loop();
+      }
     } else {
       song.setVolume(0);
     }
@@ -197,11 +269,41 @@ function mouseClicked() {
 
   // Detectando clique sobre o botão de pausar a animação do background
   if (
-    mouseX >= pausePlayBtnX &&
-    mouseX <= pausePlayBtnX + pausePlayBtnH &&
-    mouseY >= pausePlayBtnY &&
-    mouseY <= pausePlayBtnY + pausePlayBtnH
+    mouseX >= pausePlayBtn.X &&
+    mouseX <= pausePlayBtn.X + pausePlayBtn.H &&
+    mouseY >= pausePlayBtn.Y &&
+    mouseY <= pausePlayBtn.Y + pausePlayBtn.H
   ) {
     isPlayingBg = !isPlayingBg;
+  }
+
+  //Detectando clique sobre botão de iniciar
+  if (
+    mouseX >= btnIniciar.X &&
+    mouseX <= btnIniciar.X + btnIniciar.W &&
+    mouseY >= btnIniciar.Y &&
+    mouseY <= btnIniciar.Y + btnIniciar.H
+  ) {
+    currentPanel = panelEnum.INICIO;
+  }
+
+  //Detectando clique sobre botão de instruções
+  if (
+    mouseX >= btnInstr.X &&
+    mouseX <= btnInstr.X + btnInstr.W &&
+    mouseY >= btnInstr.Y &&
+    mouseY <= btnInstr.Y + btnInstr.H
+  ) {
+    currentPanel = panelEnum.INSTR;
+  }
+
+  //Detectando clique sobre botão de creditos
+  if (
+    mouseX >= btnCredt.X &&
+    mouseX <= btnCredt.X + btnCredt.W &&
+    mouseY >= btnCredt.Y &&
+    mouseY <= btnCredt.Y + btnCredt.H
+  ) {
+    currentPanel = panelEnum.CREDT;
   }
 }
