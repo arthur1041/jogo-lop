@@ -88,6 +88,9 @@ let menuBtnsCornerRadius = 20;
 //Font
 let mainFont;
 
+//Colors
+const colors = [{ colorName: '', hexCode: '' }];
+
 function preload() {
   soundFormats('mp3');
   song = loadSound('files/audios/soundtrack.mp3', onSongLoaded);
@@ -96,6 +99,12 @@ function preload() {
   pauseIcon = loadImage('files/images/pause.png');
   playIcon = loadImage('files/images/play-buttton.png');
   mainFont = loadFont('files/fonts/BADABB__.TTF');
+}
+
+function drawStartScreen() {
+  fill(255);
+  textSize(60);
+  text('Qual a cor resultante?', 300, 150);
 }
 
 function setup() {
@@ -110,10 +119,31 @@ function draw() {
   let color1 = color(backgroundR, backgroundG, backgroundB);
   let color2 = color(backgroundB, backgroundG, backgroundR);
 
-  if (currentPanel === panelEnum.MENU) {
-    clear();
-    setGradient(0, 0, width, height, color1, color2);
+  setGradient(0, 0, width, height, color1, color2);
 
+  fill(255);
+  rect(controlPanel.X, controlPanel.Y, 70, 25, 10);
+
+  const pausePlayIcon = isPlayingBg ? pauseIcon : playIcon;
+  const muteUnmuteIcon = isMuted ? unmuteIcon : muteIcon;
+
+  image(
+    pausePlayIcon,
+    pausePlayBtn.X,
+    pausePlayBtn.Y,
+    pausePlayBtn.W,
+    pausePlayBtn.H
+  );
+  image(
+    muteUnmuteIcon,
+    muteUnmuteBtn.X,
+    muteUnmuteBtn.Y,
+    muteUnmuteBtn.W,
+    muteUnmuteBtn.H
+  );
+
+  if (currentPanel === panelEnum.MENU) {
+    // clear();
     fill(255);
     textSize(80);
     textAlign(CENTER);
@@ -159,21 +189,19 @@ function draw() {
   }
 
   if (currentPanel === panelEnum.INICIO) {
-    clear();
-    background(220);
-    fill(255);
-    text('Tela de Inicio', 300, 300);
+    // clear();
+    drawStartScreen();
   }
 
   if (currentPanel === panelEnum.INSTR) {
-    clear();
+    // clear();
     background(220);
     fill(255);
     text('Tela de Instrucoes', 300, 300);
   }
 
   if (currentPanel === panelEnum.CREDT) {
-    clear();
+    // clear();
     background(220);
     fill(255);
     text('Tela de Creditos', 300, 300);
@@ -277,33 +305,35 @@ function mouseClicked() {
     isPlayingBg = !isPlayingBg;
   }
 
-  //Detectando clique sobre botão de iniciar
-  if (
-    mouseX >= btnIniciar.X &&
-    mouseX <= btnIniciar.X + btnIniciar.W &&
-    mouseY >= btnIniciar.Y &&
-    mouseY <= btnIniciar.Y + btnIniciar.H
-  ) {
-    currentPanel = panelEnum.INICIO;
-  }
+  if (currentPanel === panelEnum.MENU) {
+    //Detectando clique sobre botão de iniciar
+    if (
+      mouseX >= btnIniciar.X &&
+      mouseX <= btnIniciar.X + btnIniciar.W &&
+      mouseY >= btnIniciar.Y &&
+      mouseY <= btnIniciar.Y + btnIniciar.H
+    ) {
+      currentPanel = panelEnum.INICIO;
+    }
 
-  //Detectando clique sobre botão de instruções
-  if (
-    mouseX >= btnInstr.X &&
-    mouseX <= btnInstr.X + btnInstr.W &&
-    mouseY >= btnInstr.Y &&
-    mouseY <= btnInstr.Y + btnInstr.H
-  ) {
-    currentPanel = panelEnum.INSTR;
-  }
+    //Detectando clique sobre botão de instruções
+    if (
+      mouseX >= btnInstr.X &&
+      mouseX <= btnInstr.X + btnInstr.W &&
+      mouseY >= btnInstr.Y &&
+      mouseY <= btnInstr.Y + btnInstr.H
+    ) {
+      currentPanel = panelEnum.INSTR;
+    }
 
-  //Detectando clique sobre botão de creditos
-  if (
-    mouseX >= btnCredt.X &&
-    mouseX <= btnCredt.X + btnCredt.W &&
-    mouseY >= btnCredt.Y &&
-    mouseY <= btnCredt.Y + btnCredt.H
-  ) {
-    currentPanel = panelEnum.CREDT;
+    //Detectando clique sobre botão de creditos
+    if (
+      mouseX >= btnCredt.X &&
+      mouseX <= btnCredt.X + btnCredt.W &&
+      mouseY >= btnCredt.Y &&
+      mouseY <= btnCredt.Y + btnCredt.H
+    ) {
+      currentPanel = panelEnum.CREDT;
+    }
   }
 }
