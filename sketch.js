@@ -135,7 +135,7 @@ function sortElementWithUniquePrevious() {
 }
 
 let firstAlternativeIcon = {
-  X: sortElementWithUniquePrevious(),
+  X: undefined,
   Y: 440,
   W: 60,
   H: 60,
@@ -143,7 +143,7 @@ let firstAlternativeIcon = {
 };
 
 let secondAlternativeIcon = {
-  X: sortElementWithUniquePrevious(),
+  X: undefined,
   Y: 440,
   W: 60,
   H: 60,
@@ -151,7 +151,7 @@ let secondAlternativeIcon = {
 };
 
 let thirdAlternativeIcon = {
-  X: sortElementWithUniquePrevious(),
+  X: undefined,
   Y: 440,
   W: 60,
   H: 60,
@@ -159,7 +159,7 @@ let thirdAlternativeIcon = {
 };
 
 let fourthAlternativeIcon = {
-  X: sortElementWithUniquePrevious(),
+  X: undefined,
   Y: 440,
   W: 60,
   H: 60,
@@ -167,7 +167,7 @@ let fourthAlternativeIcon = {
 };
 
 let fifithAlternativeIcon = {
-  X: sortElementWithUniquePrevious(),
+  X: undefined,
   Y: 440,
   W: 60,
   H: 60,
@@ -203,7 +203,71 @@ function preload() {
   mainFont = loadFont('files/fonts/BADABB__.TTF');
 }
 
+function drawMenuScreen() {
+  cursor(ARROW);
+  if (
+    isMouseOver(btnIniciar.X, btnIniciar.Y, btnIniciar.W, btnIniciar.H) ||
+    isMouseOver(btnInstr.X, btnInstr.Y, btnInstr.W, btnInstr.H) ||
+    isMouseOver(btnCredt.X, btnCredt.Y, btnCredt.W, btnCredt.H)
+  ) {
+    cursor(HAND);
+  }
+
+  fill(255);
+  textSize(80);
+  textAlign(CENTER);
+  textFont(mainFont);
+  text('Guess The Color', 295, 150);
+
+  rect(controlPanel.X, controlPanel.Y, 70, 25, 10);
+
+  const pausePlayIcon = isPlayingBg ? pauseIcon : playIcon;
+  const muteUnmuteIcon = isMuted ? unmuteIcon : muteIcon;
+
+  image(
+    pausePlayIcon,
+    pausePlayBtn.X,
+    pausePlayBtn.Y,
+    pausePlayBtn.W,
+    pausePlayBtn.H
+  );
+  image(
+    muteUnmuteIcon,
+    muteUnmuteBtn.X,
+    muteUnmuteBtn.Y,
+    muteUnmuteBtn.W,
+    muteUnmuteBtn.H
+  );
+
+  fill(255, 255, 255);
+  rect(
+    btnIniciar.X,
+    btnIniciar.Y,
+    btnIniciar.W,
+    btnIniciar.H,
+    menuBtnsCornerRadius
+  );
+  rect(btnInstr.X, btnInstr.Y, btnInstr.W, btnInstr.H, menuBtnsCornerRadius);
+  rect(btnCredt.X, btnCredt.Y, btnCredt.W, btnCredt.H, menuBtnsCornerRadius);
+
+  fill(95, 158, 160);
+  textSize(40);
+  text(btnIniciar.text, btnIniciar.textX, btnIniciar.textY);
+  text(btnInstr.text, btnInstr.textX, btnInstr.textY);
+  text(btnCredt.text, btnCredt.textX, btnCredt.textY);
+}
+
 function drawStartScreen() {
+  cursor(ARROW);
+  if (
+    isMouseOver(firstAlternativeIcon.X, firstAlternativeIcon.Y, firstAlternativeIcon.W, firstAlternativeIcon.H) ||
+    isMouseOver(secondAlternativeIcon.X, secondAlternativeIcon.Y, secondAlternativeIcon.W, secondAlternativeIcon.H) ||
+    isMouseOver(thirdAlternativeIcon.X, thirdAlternativeIcon.Y, thirdAlternativeIcon.W, thirdAlternativeIcon.H) || 
+    isMouseOver(fourthAlternativeIcon.X, fourthAlternativeIcon.Y, fourthAlternativeIcon.W, fourthAlternativeIcon.H) ||
+    isMouseOver(fifithAlternativeIcon.X, fifithAlternativeIcon.Y, fifithAlternativeIcon.W, fifithAlternativeIcon.H)
+  ) {
+    cursor(HAND);
+  }
   fill(255);
   textSize(60);
   text('Qual a cor resultante?', 300, 150);
@@ -316,14 +380,20 @@ function drawStartScreen() {
 }
 
 function setup() {
-  const mainCanvas = createCanvas(600, 600);
   sessionStorage.clear();
+  firstAlternativeIcon.X = sortElementWithUniquePrevious();
+  secondAlternativeIcon.X = sortElementWithUniquePrevious();
+  thirdAlternativeIcon.X = sortElementWithUniquePrevious();
+  fourthAlternativeIcon.X = sortElementWithUniquePrevious();
+  fifithAlternativeIcon.X = sortElementWithUniquePrevious();
+  const mainCanvas = createCanvas(600, 600);
   bgRedIntervalRef = setInterval(myBgRedComponentLoop, 100 / 16);
   bgGreenIntervalRef = setInterval(myBgGreenComponentLoop, 100 / 8);
   bgBlueIntervalRef = setInterval(myBgBlueComponentLoop, 100 / 4);
 }
 
 function draw() {
+  cursor(ARROW);
   let color1 = color(backgroundR, backgroundG, backgroundB);
   let color2 = color(backgroundB, backgroundG, backgroundR);
 
@@ -334,6 +404,26 @@ function draw() {
 
   const pausePlayIcon = isPlayingBg ? pauseIcon : playIcon;
   const muteUnmuteIcon = isMuted ? unmuteIcon : muteIcon;
+
+  if (
+    isMouseOver(btnIniciar.X, btnIniciar.Y, btnIniciar.W, btnIniciar.H) ||
+    isMouseOver(btnInstr.X, btnInstr.Y, btnInstr.W, btnInstr.H) ||
+    isMouseOver(btnCredt.X, btnCredt.Y, btnCredt.W, btnCredt.H) ||
+    isMouseOver(
+      pausePlayBtn.X,
+      pausePlayBtn.Y,
+      pausePlayBtn.W,
+      pausePlayBtn.H
+    ) ||
+    isMouseOver(
+      muteUnmuteBtn.X,
+      muteUnmuteBtn.Y,
+      muteUnmuteBtn.W,
+      muteUnmuteBtn.H
+    )
+  ) {
+    cursor(HAND);
+  }
 
   image(
     pausePlayIcon,
@@ -351,53 +441,10 @@ function draw() {
   );
 
   if (currentPanel === panelEnum.MENU) {
-    // clear();
-    fill(255);
-    textSize(80);
-    textAlign(CENTER);
-    textFont(mainFont);
-    text('Guess The Color', 295, 150);
-
-    rect(controlPanel.X, controlPanel.Y, 70, 25, 10);
-
-    const pausePlayIcon = isPlayingBg ? pauseIcon : playIcon;
-    const muteUnmuteIcon = isMuted ? unmuteIcon : muteIcon;
-
-    image(
-      pausePlayIcon,
-      pausePlayBtn.X,
-      pausePlayBtn.Y,
-      pausePlayBtn.W,
-      pausePlayBtn.H
-    );
-    image(
-      muteUnmuteIcon,
-      muteUnmuteBtn.X,
-      muteUnmuteBtn.Y,
-      muteUnmuteBtn.W,
-      muteUnmuteBtn.H
-    );
-
-    fill(255, 255, 255);
-    rect(
-      btnIniciar.X,
-      btnIniciar.Y,
-      btnIniciar.W,
-      btnIniciar.H,
-      menuBtnsCornerRadius
-    );
-    rect(btnInstr.X, btnInstr.Y, btnInstr.W, btnInstr.H, menuBtnsCornerRadius);
-    rect(btnCredt.X, btnCredt.Y, btnCredt.W, btnCredt.H, menuBtnsCornerRadius);
-
-    fill(95, 158, 160);
-    textSize(40);
-    text(btnIniciar.text, btnIniciar.textX, btnIniciar.textY);
-    text(btnInstr.text, btnInstr.textX, btnInstr.textY);
-    text(btnCredt.text, btnCredt.textX, btnCredt.textY);
+    drawMenuScreen();
   }
 
   if (currentPanel === panelEnum.INICIO) {
-    // clear();
     drawStartScreen();
   }
 
@@ -621,4 +668,10 @@ function generateRandomHexCode(excludeHexCode) {
   } while (randomHexCode === excludeHexCode || isTooDark || isTooWhite);
 
   return '#' + randomHexCode;
+}
+
+function isMouseOver(x, y, width, height) {
+  return (
+    mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height
+  );
 }
