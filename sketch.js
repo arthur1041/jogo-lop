@@ -6,7 +6,15 @@ const panelEnum = {
   LOADING: 'loading',
 };
 
+const stagesEnum = {
+  FIRST: 1,
+  SECOND: 2,
+  THIRD: 3,
+  FOURTH: 4,
+};
+
 let currentPanel = panelEnum.MENU;
+let currentStage = stagesEnum.FIRST;
 
 //Controls
 let muteIcon;
@@ -85,11 +93,105 @@ let btnCredt = {
 
 let menuBtnsCornerRadius = 20;
 
+let firstColorIcon = {
+  X: 80,
+  Y: 200,
+  W: 150,
+  H: 150,
+  R: 150,
+};
+
+let secondColorIcon = {
+  X: 370,
+  Y: 200,
+  W: 150,
+  H: 150,
+  R: 150,
+};
+
+const colorsOptionsXPositionsArray = [
+  90,
+  90 + 90,
+  90 + 2 * 90,
+  90 + 3 * 90,
+  90 + 4 * 90,
+];
+
+function sortElementWithUniquePrevious() {
+  const sortedElements =
+    JSON.parse(sessionStorage.getItem('sortedElements')) || [];
+
+  const availableElements = colorsOptionsXPositionsArray.filter(
+    (element) => !sortedElements.includes(element)
+  );
+
+  const sortedElement =
+    availableElements[Math.floor(Math.random() * availableElements.length)];
+  sortedElements.push(sortedElement);
+
+  sessionStorage.setItem('sortedElements', JSON.stringify(sortedElements));
+
+  return sortedElement;
+}
+
+let firstAlternativeIcon = {
+  X: sortElementWithUniquePrevious(),
+  Y: 440,
+  W: 60,
+  H: 60,
+  R: 60,
+};
+
+let secondAlternativeIcon = {
+  X: sortElementWithUniquePrevious(),
+  Y: 440,
+  W: 60,
+  H: 60,
+  R: 60,
+};
+
+let thirdAlternativeIcon = {
+  X: sortElementWithUniquePrevious(),
+  Y: 440,
+  W: 60,
+  H: 60,
+  R: 60,
+};
+
+let fourthAlternativeIcon = {
+  X: sortElementWithUniquePrevious(),
+  Y: 440,
+  W: 60,
+  H: 60,
+  R: 60,
+};
+
+let fifithAlternativeIcon = {
+  X: sortElementWithUniquePrevious(),
+  Y: 440,
+  W: 60,
+  H: 60,
+  R: 60,
+};
+
 //Font
 let mainFont;
 
 //Colors
-const colors = [{ colorName: '', hexCode: '' }];
+const colors = {
+  RED: { colorName: 'red', hexCode: '#FF0000' },
+  YELLOW: { colorName: 'yellow', hexCode: '#FFFF00' },
+  ORANGE: { color1Name: 'orange', hexCode: '#FF8000' },
+};
+
+const getColorsCombinationResult = (color1Name, color2Name) => {
+  const color1Hex = colors[color1Name.toUpperCase()];
+  const color2Hex = colors[color2Name.toUpperCase()];
+
+  if (color1Hex === colors.RED.hexCode && color2Hex === colors.YELLOW.hexCode) {
+    return colors.ORANGE;
+  }
+};
 
 function preload() {
   soundFormats('mp3');
@@ -105,11 +207,117 @@ function drawStartScreen() {
   fill(255);
   textSize(60);
   text('Qual a cor resultante?', 300, 150);
+
+  textSize(150);
+  text('+', 300, 320);
+
+  textSize(30);
+  text('Alternativas:', 130, 410);
+
+  stroke(255, 255, 255);
+  strokeWeight(4);
+  if (currentStage === stagesEnum.FIRST) {
+    fill(color(colors.RED.hexCode));
+    rect(
+      firstColorIcon.X,
+      firstColorIcon.Y,
+      firstColorIcon.W,
+      firstColorIcon.H,
+      firstColorIcon.R
+    );
+
+    fill(color(colors.YELLOW.hexCode));
+    rect(
+      secondColorIcon.X,
+      secondColorIcon.Y,
+      secondColorIcon.W,
+      secondColorIcon.H,
+      secondColorIcon.R
+    );
+
+    strokeWeight(2);
+    fill(color(colors.ORANGE.hexCode));
+    rect(
+      firstAlternativeIcon.X,
+      firstAlternativeIcon.Y,
+      firstAlternativeIcon.W,
+      firstAlternativeIcon.H,
+      firstAlternativeIcon.R
+    );
+
+    const secondColorCacheKey = `${stagesEnum.FIRST}-secondAlternativeIcon`;
+
+    if (!sessionStorage.getItem(secondColorCacheKey)) {
+      sessionStorage.setItem(
+        secondColorCacheKey,
+        generateRandomHexCode(colors.ORANGE.hexCode)
+      );
+    }
+    fill(color(sessionStorage.getItem(secondColorCacheKey)));
+    rect(
+      secondAlternativeIcon.X,
+      secondAlternativeIcon.Y,
+      secondAlternativeIcon.W,
+      secondAlternativeIcon.H,
+      secondAlternativeIcon.R
+    );
+
+    const thirdColorCacheKey = `${stagesEnum.FIRST}-thirdAlternativeIcon`;
+
+    if (!sessionStorage.getItem(thirdColorCacheKey)) {
+      sessionStorage.setItem(
+        thirdColorCacheKey,
+        generateRandomHexCode(colors.ORANGE.hexCode)
+      );
+    }
+    fill(color(sessionStorage.getItem(thirdColorCacheKey)));
+    rect(
+      thirdAlternativeIcon.X,
+      thirdAlternativeIcon.Y,
+      thirdAlternativeIcon.W,
+      thirdAlternativeIcon.H,
+      thirdAlternativeIcon.R
+    );
+
+    const fourthColorCacheKey = `${stagesEnum.FIRST}-fourthAlternativeIcon`;
+
+    if (!sessionStorage.getItem(fourthColorCacheKey)) {
+      sessionStorage.setItem(
+        fourthColorCacheKey,
+        generateRandomHexCode(colors.ORANGE.hexCode)
+      );
+    }
+    fill(color(sessionStorage.getItem(fourthColorCacheKey)));
+    rect(
+      fourthAlternativeIcon.X,
+      fourthAlternativeIcon.Y,
+      fourthAlternativeIcon.W,
+      fourthAlternativeIcon.H,
+      fourthAlternativeIcon.R
+    );
+
+    const fifithColorCacheKey = `${stagesEnum.FIRST}-fifithAlternativeIcon`;
+
+    if (!sessionStorage.getItem(fifithColorCacheKey)) {
+      sessionStorage.setItem(
+        fifithColorCacheKey,
+        generateRandomHexCode(colors.ORANGE.hexCode)
+      );
+    }
+    fill(color(sessionStorage.getItem(fifithColorCacheKey)));
+    rect(
+      fifithAlternativeIcon.X,
+      fifithAlternativeIcon.Y,
+      fifithAlternativeIcon.W,
+      fifithAlternativeIcon.H,
+      fifithAlternativeIcon.R
+    );
+  }
 }
 
 function setup() {
   const mainCanvas = createCanvas(600, 600);
-
+  sessionStorage.clear();
   bgRedIntervalRef = setInterval(myBgRedComponentLoop, 100 / 16);
   bgGreenIntervalRef = setInterval(myBgGreenComponentLoop, 100 / 8);
   bgBlueIntervalRef = setInterval(myBgBlueComponentLoop, 100 / 4);
@@ -336,4 +544,81 @@ function mouseClicked() {
       currentPanel = panelEnum.CREDT;
     }
   }
+
+  if (currentPanel === panelEnum.INICIO) {
+    // if(currentStage === stagesEnum.FIRST) {
+    if (
+      mouseX >= firstAlternativeIcon.X &&
+      mouseX <= firstAlternativeIcon.X + firstAlternativeIcon.H &&
+      mouseY >= firstAlternativeIcon.Y &&
+      mouseY <= firstAlternativeIcon.Y + firstAlternativeIcon.H
+    ) {
+      alert('Correto! (avança de fase)');
+    }
+
+    if (
+      mouseX >= secondAlternativeIcon.X &&
+      mouseX <= secondAlternativeIcon.X + secondAlternativeIcon.H &&
+      mouseY >= secondAlternativeIcon.Y &&
+      mouseY <= secondAlternativeIcon.Y + secondAlternativeIcon.H
+    ) {
+      alert('Incorreto!');
+    }
+
+    if (
+      mouseX >= thirdAlternativeIcon.X &&
+      mouseX <= thirdAlternativeIcon.X + thirdAlternativeIcon.H &&
+      mouseY >= thirdAlternativeIcon.Y &&
+      mouseY <= thirdAlternativeIcon.Y + thirdAlternativeIcon.H
+    ) {
+      alert('Incorreto!');
+    }
+
+    if (
+      mouseX >= fourthAlternativeIcon.X &&
+      mouseX <= fourthAlternativeIcon.X + fourthAlternativeIcon.H &&
+      mouseY >= fourthAlternativeIcon.Y &&
+      mouseY <= fourthAlternativeIcon.Y + fourthAlternativeIcon.H
+    ) {
+      alert('Incorreto!');
+    }
+
+    if (
+      mouseX >= fifithAlternativeIcon.X &&
+      mouseX <= fifithAlternativeIcon.X + fifithAlternativeIcon.H &&
+      mouseY >= fifithAlternativeIcon.Y &&
+      mouseY <= fifithAlternativeIcon.Y + fifithAlternativeIcon.H
+    ) {
+      alert('Incorreto!');
+    }
+
+    // }
+  }
+}
+
+function generateRandomHexCode(excludeHexCode) {
+  let randomHexCode;
+  let isTooDark;
+  let isTooWhite;
+
+  do {
+    const randomNum = Math.floor(Math.random() * 16777216);
+
+    randomHexCode = randomNum.toString(16).toUpperCase();
+
+    while (randomHexCode.length < 6) {
+      randomHexCode = '0' + randomHexCode;
+    }
+
+    const colorValue = parseInt(randomHexCode, 16);
+    const r = (colorValue >> 16) & 255;
+    const g = (colorValue >> 8) & 255;
+    const b = colorValue & 255;
+    const brightness = (r + g + b) / 3;
+
+    isTooDark = brightness < 64;
+    isTooWhite = brightness > 192;
+  } while (randomHexCode === excludeHexCode || isTooDark || isTooWhite);
+
+  return '#' + randomHexCode;
 }
