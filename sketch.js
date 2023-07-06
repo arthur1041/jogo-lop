@@ -12,6 +12,7 @@ const stagesEnum = {
   SECOND: 2,
   THIRD: 3,
   FOURTH: 4,
+  END: 5
 };
 
 //Controls
@@ -247,7 +248,6 @@ function drawMenuScreen() {
 
 function drawStartScreen() {
   cursor(ARROW);
-  console.log(currentStage);
   if (currentStage === undefined || currentStage === stagesEnum.LEVELS) {
     currentStage = stagesEnum.LEVELS;
     if (
@@ -280,7 +280,11 @@ function drawStartScreen() {
     text('Facil', btnIniciar.textX, btnIniciar.textY);
     text('Medio', btnInstr.textX, btnInstr.textY);
     text('Dificil', btnCredt.textX, btnCredt.textY);
-  } else {
+
+    return;
+  }
+
+  if (retries > 0) {
     if (
       isMouseOver(
         firstAlternativeIcon.X,
@@ -316,6 +320,9 @@ function drawStartScreen() {
       cursor(HAND);
     }
     fill(255);
+    textSize(25);
+    text(`Tentativas: ${retries}`, 100, 50);
+
     textSize(60);
     text('Qual a cor resultante?', 300, 150);
 
@@ -718,6 +725,17 @@ function drawStartScreen() {
         fifithAlternativeIcon.R
       );
     }
+
+    if (currentStage === stagesEnum.END) {
+      background(0, 255, 0);
+      textSize(120);
+      text('Vencendor', 300, 320);
+    }
+  } else {
+    song.stop();
+    background(255, 0, 0);
+    textSize(120);
+    text('Game Over', 300, 320);
   }
 }
 
@@ -987,7 +1005,7 @@ function mouseClicked() {
       mouseY >= secondAlternativeIcon.Y &&
       mouseY <= secondAlternativeIcon.Y + secondAlternativeIcon.H
     ) {
-      alert('Incorreto!');
+      retries--;
     }
 
     if (
@@ -996,7 +1014,7 @@ function mouseClicked() {
       mouseY >= thirdAlternativeIcon.Y &&
       mouseY <= thirdAlternativeIcon.Y + thirdAlternativeIcon.H
     ) {
-      alert('Incorreto!');
+      retries--;
     }
 
     if (
@@ -1005,7 +1023,7 @@ function mouseClicked() {
       mouseY >= fourthAlternativeIcon.Y &&
       mouseY <= fourthAlternativeIcon.Y + fourthAlternativeIcon.H
     ) {
-      alert('Incorreto!');
+      retries--;
     }
 
     if (
@@ -1014,7 +1032,7 @@ function mouseClicked() {
       mouseY >= fifithAlternativeIcon.Y &&
       mouseY <= fifithAlternativeIcon.Y + fifithAlternativeIcon.H
     ) {
-      alert('Incorreto!');
+      retries--;
     }
 
     // }
