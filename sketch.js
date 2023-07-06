@@ -182,6 +182,10 @@ const colors = {
   RED: { colorName: 'red', hexCode: '#FF0000' },
   YELLOW: { colorName: 'yellow', hexCode: '#FFFF00' },
   ORANGE: { color1Name: 'orange', hexCode: '#FF8000' },
+  GREEN: {colorName: 'green', hexCode: '#00FF00'},
+  BLUE: {colorName: 'blue', hexCode: '#0000FF'},
+  TEAL: {colorName: 'teal', hexCode: '#008080'},
+  OLIVE_DRAB: {colorName: 'olive drab', hexCode: '#808040'}
 };
 
 const getColorsCombinationResult = (color1Name, color2Name) => {
@@ -366,6 +370,202 @@ function drawStartScreen() {
       sessionStorage.setItem(
         fifithColorCacheKey,
         generateRandomHexCode(colors.ORANGE.hexCode)
+      );
+    }
+    fill(color(sessionStorage.getItem(fifithColorCacheKey)));
+    rect(
+      fifithAlternativeIcon.X,
+      fifithAlternativeIcon.Y,
+      fifithAlternativeIcon.W,
+      fifithAlternativeIcon.H,
+      fifithAlternativeIcon.R
+    );
+  }
+
+  if (currentStage === stagesEnum.SECOND) {
+    fill(color(colors.GREEN.hexCode));
+    rect(
+      firstColorIcon.X,
+      firstColorIcon.Y,
+      firstColorIcon.W,
+      firstColorIcon.H,
+      firstColorIcon.R
+    );
+
+    fill(color(colors.BLUE.hexCode));
+    rect(
+      secondColorIcon.X,
+      secondColorIcon.Y,
+      secondColorIcon.W,
+      secondColorIcon.H,
+      secondColorIcon.R
+    );
+
+    strokeWeight(2);
+    fill(color(colors.TEAL.hexCode));
+    rect(
+      firstAlternativeIcon.X,
+      firstAlternativeIcon.Y,
+      firstAlternativeIcon.W,
+      firstAlternativeIcon.H,
+      firstAlternativeIcon.R
+    );
+
+    const secondColorCacheKey = `${stagesEnum.SECOND}-secondAlternativeIcon`;
+
+    if (!sessionStorage.getItem(secondColorCacheKey)) {
+      sessionStorage.setItem(
+        secondColorCacheKey,
+        generateRandomHexCode(colors.TEAL.hexCode)
+      );
+    }
+    fill(color(sessionStorage.getItem(secondColorCacheKey)));
+    rect(
+      secondAlternativeIcon.X,
+      secondAlternativeIcon.Y,
+      secondAlternativeIcon.W,
+      secondAlternativeIcon.H,
+      secondAlternativeIcon.R
+    );
+
+    const thirdColorCacheKey = `${stagesEnum.SECOND}-thirdAlternativeIcon`;
+
+    if (!sessionStorage.getItem(thirdColorCacheKey)) {
+      sessionStorage.setItem(
+        thirdColorCacheKey,
+        generateRandomHexCode(colors.TEAL.hexCode)
+      );
+    }
+    fill(color(sessionStorage.getItem(thirdColorCacheKey)));
+    rect(
+      thirdAlternativeIcon.X,
+      thirdAlternativeIcon.Y,
+      thirdAlternativeIcon.W,
+      thirdAlternativeIcon.H,
+      thirdAlternativeIcon.R
+    );
+
+    const fourthColorCacheKey = `${stagesEnum.SECOND}-fourthAlternativeIcon`;
+
+    if (!sessionStorage.getItem(fourthColorCacheKey)) {
+      sessionStorage.setItem(
+        fourthColorCacheKey,
+        generateRandomHexCode(colors.TEAL.hexCode)
+      );
+    }
+    fill(color(sessionStorage.getItem(fourthColorCacheKey)));
+    rect(
+      fourthAlternativeIcon.X,
+      fourthAlternativeIcon.Y,
+      fourthAlternativeIcon.W,
+      fourthAlternativeIcon.H,
+      fourthAlternativeIcon.R
+    );
+
+    const fifithColorCacheKey = `${stagesEnum.SECOND}-fifithAlternativeIcon`;
+
+    if (!sessionStorage.getItem(fifithColorCacheKey)) {
+      sessionStorage.setItem(
+        fifithColorCacheKey,
+        generateRandomHexCode(colors.TEAL.hexCode)
+      );
+    }
+    fill(color(sessionStorage.getItem(fifithColorCacheKey)));
+    rect(
+      fifithAlternativeIcon.X,
+      fifithAlternativeIcon.Y,
+      fifithAlternativeIcon.W,
+      fifithAlternativeIcon.H,
+      fifithAlternativeIcon.R
+    );
+  }
+
+  if (currentStage === stagesEnum.THIRD) {
+    fill(color(colors.ORANGE.hexCode));
+    rect(
+      firstColorIcon.X,
+      firstColorIcon.Y,
+      firstColorIcon.W,
+      firstColorIcon.H,
+      firstColorIcon.R
+    );
+
+    fill(color(colors.TEAL.hexCode));
+    rect(
+      secondColorIcon.X,
+      secondColorIcon.Y,
+      secondColorIcon.W,
+      secondColorIcon.H,
+      secondColorIcon.R
+    );
+
+    strokeWeight(2);
+    fill(color(colors.OLIVE_DRAB.hexCode));
+    rect(
+      firstAlternativeIcon.X,
+      firstAlternativeIcon.Y,
+      firstAlternativeIcon.W,
+      firstAlternativeIcon.H,
+      firstAlternativeIcon.R
+    );
+
+    const secondColorCacheKey = `${stagesEnum.THIRD}-secondAlternativeIcon`;
+
+    if (!sessionStorage.getItem(secondColorCacheKey)) {
+      sessionStorage.setItem(
+        secondColorCacheKey,
+        generateRandomHexCode(colors.OLIVE_DRAB.hexCode)
+      );
+    }
+    fill(color(sessionStorage.getItem(secondColorCacheKey)));
+    rect(
+      secondAlternativeIcon.X,
+      secondAlternativeIcon.Y,
+      secondAlternativeIcon.W,
+      secondAlternativeIcon.H,
+      secondAlternativeIcon.R
+    );
+
+    const thirdColorCacheKey = `${stagesEnum.THIRD}-thirdAlternativeIcon`;
+
+    if (!sessionStorage.getItem(thirdColorCacheKey)) {
+      sessionStorage.setItem(
+        thirdColorCacheKey,
+        generateRandomHexCode(colors.OLIVE_DRAB.hexCode)
+      );
+    }
+    fill(color(sessionStorage.getItem(thirdColorCacheKey)));
+    rect(
+      thirdAlternativeIcon.X,
+      thirdAlternativeIcon.Y,
+      thirdAlternativeIcon.W,
+      thirdAlternativeIcon.H,
+      thirdAlternativeIcon.R
+    );
+
+    const fourthColorCacheKey = `${stagesEnum.THIRD}-fourthAlternativeIcon`;
+
+    if (!sessionStorage.getItem(fourthColorCacheKey)) {
+      sessionStorage.setItem(
+        fourthColorCacheKey,
+        generateRandomHexCode(colors.OLIVE_DRAB.hexCode)
+      );
+    }
+    fill(color(sessionStorage.getItem(fourthColorCacheKey)));
+    rect(
+      fourthAlternativeIcon.X,
+      fourthAlternativeIcon.Y,
+      fourthAlternativeIcon.W,
+      fourthAlternativeIcon.H,
+      fourthAlternativeIcon.R
+    );
+
+    const fifithColorCacheKey = `${stagesEnum.THIRD}-fifithAlternativeIcon`;
+
+    if (!sessionStorage.getItem(fifithColorCacheKey)) {
+      sessionStorage.setItem(
+        fifithColorCacheKey,
+        generateRandomHexCode(colors.OLIVE_DRAB.hexCode)
       );
     }
     fill(color(sessionStorage.getItem(fifithColorCacheKey)));
@@ -600,7 +800,7 @@ function mouseClicked() {
       mouseY >= firstAlternativeIcon.Y &&
       mouseY <= firstAlternativeIcon.Y + firstAlternativeIcon.H
     ) {
-      alert('Correto! (avança de fase)');
+      currentStage = currentStage+1;
     }
 
     if (
