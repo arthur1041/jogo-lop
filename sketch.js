@@ -7,14 +7,12 @@ const panelEnum = {
 };
 
 const stagesEnum = {
+  LEVELS: 0,
   FIRST: 1,
   SECOND: 2,
   THIRD: 3,
   FOURTH: 4,
 };
-
-let currentPanel = panelEnum.MENU;
-let currentStage = stagesEnum.FIRST;
 
 //Controls
 let muteIcon;
@@ -44,6 +42,9 @@ let controlPanel = {
   X: 520,
   Y: 13,
 };
+
+let currentPanel;
+let currentStage;
 
 //Soundtrack
 let song;
@@ -100,6 +101,8 @@ let firstColorIcon = {
   H: 150,
   R: 150,
 };
+
+let retries;
 
 let secondColorIcon = {
   X: 370,
@@ -182,10 +185,11 @@ const colors = {
   RED: { colorName: 'red', hexCode: '#FF0000' },
   YELLOW: { colorName: 'yellow', hexCode: '#FFFF00' },
   ORANGE: { color1Name: 'orange', hexCode: '#FF8000' },
-  GREEN: {colorName: 'green', hexCode: '#00FF00'},
-  BLUE: {colorName: 'blue', hexCode: '#0000FF'},
-  TEAL: {colorName: 'teal', hexCode: '#008080'},
-  OLIVE_DRAB: {colorName: 'olive drab', hexCode: '#808040'}
+  GREEN: { colorName: 'green', hexCode: '#00FF00' },
+  BLUE: { colorName: 'blue', hexCode: '#0000FF' },
+  TEAL: { colorName: 'teal', hexCode: '#008080' },
+  OLIVE_DRAB: { colorName: 'olive drab', hexCode: '#808040' },
+  PURPLE: { colorName: 'purple', hexCode: '#800080' },
 };
 
 const getColorsCombinationResult = (color1Name, color2Name) => {
@@ -223,26 +227,6 @@ function drawMenuScreen() {
   textFont(mainFont);
   text('Guess The Color', 295, 150);
 
-  rect(controlPanel.X, controlPanel.Y, 70, 25, 10);
-
-  const pausePlayIcon = isPlayingBg ? pauseIcon : playIcon;
-  const muteUnmuteIcon = isMuted ? unmuteIcon : muteIcon;
-
-  image(
-    pausePlayIcon,
-    pausePlayBtn.X,
-    pausePlayBtn.Y,
-    pausePlayBtn.W,
-    pausePlayBtn.H
-  );
-  image(
-    muteUnmuteIcon,
-    muteUnmuteBtn.X,
-    muteUnmuteBtn.Y,
-    muteUnmuteBtn.W,
-    muteUnmuteBtn.H
-  );
-
   fill(255, 255, 255);
   rect(
     btnIniciar.X,
@@ -263,324 +247,483 @@ function drawMenuScreen() {
 
 function drawStartScreen() {
   cursor(ARROW);
-  if (
-    isMouseOver(firstAlternativeIcon.X, firstAlternativeIcon.Y, firstAlternativeIcon.W, firstAlternativeIcon.H) ||
-    isMouseOver(secondAlternativeIcon.X, secondAlternativeIcon.Y, secondAlternativeIcon.W, secondAlternativeIcon.H) ||
-    isMouseOver(thirdAlternativeIcon.X, thirdAlternativeIcon.Y, thirdAlternativeIcon.W, thirdAlternativeIcon.H) || 
-    isMouseOver(fourthAlternativeIcon.X, fourthAlternativeIcon.Y, fourthAlternativeIcon.W, fourthAlternativeIcon.H) ||
-    isMouseOver(fifithAlternativeIcon.X, fifithAlternativeIcon.Y, fifithAlternativeIcon.W, fifithAlternativeIcon.H)
-  ) {
-    cursor(HAND);
-  }
-  fill(255);
-  textSize(60);
-  text('Qual a cor resultante?', 300, 150);
+  console.log(currentStage);
+  if (currentStage === undefined || currentStage === stagesEnum.LEVELS) {
+    currentStage = stagesEnum.LEVELS;
+    if (
+      isMouseOver(btnIniciar.X, btnIniciar.Y, btnIniciar.W, btnIniciar.H) ||
+      isMouseOver(btnInstr.X, btnInstr.Y, btnInstr.W, btnInstr.H) ||
+      isMouseOver(btnCredt.X, btnCredt.Y, btnCredt.W, btnCredt.H)
+    ) {
+      cursor(HAND);
+    }
 
-  textSize(150);
-  text('+', 300, 320);
+    fill(255);
+    textSize(80);
+    textAlign(CENTER);
+    textFont(mainFont);
+    text('Escolha o nivel', 295, 150);
 
-  textSize(30);
-  text('Alternativas:', 130, 410);
-
-  stroke(255, 255, 255);
-  strokeWeight(4);
-  if (currentStage === stagesEnum.FIRST) {
-    fill(color(colors.RED.hexCode));
+    fill(255, 255, 255);
     rect(
-      firstColorIcon.X,
-      firstColorIcon.Y,
-      firstColorIcon.W,
-      firstColorIcon.H,
-      firstColorIcon.R
+      btnIniciar.X,
+      btnIniciar.Y,
+      btnIniciar.W,
+      btnIniciar.H,
+      menuBtnsCornerRadius
     );
+    rect(btnInstr.X, btnInstr.Y, btnInstr.W, btnInstr.H, menuBtnsCornerRadius);
+    rect(btnCredt.X, btnCredt.Y, btnCredt.W, btnCredt.H, menuBtnsCornerRadius);
 
-    fill(color(colors.YELLOW.hexCode));
-    rect(
-      secondColorIcon.X,
-      secondColorIcon.Y,
-      secondColorIcon.W,
-      secondColorIcon.H,
-      secondColorIcon.R
-    );
+    fill(95, 158, 160);
+    textSize(40);
+    text('Facil', btnIniciar.textX, btnIniciar.textY);
+    text('Medio', btnInstr.textX, btnInstr.textY);
+    text('Dificil', btnCredt.textX, btnCredt.textY);
+  } else {
+    if (
+      isMouseOver(
+        firstAlternativeIcon.X,
+        firstAlternativeIcon.Y,
+        firstAlternativeIcon.W,
+        firstAlternativeIcon.H
+      ) ||
+      isMouseOver(
+        secondAlternativeIcon.X,
+        secondAlternativeIcon.Y,
+        secondAlternativeIcon.W,
+        secondAlternativeIcon.H
+      ) ||
+      isMouseOver(
+        thirdAlternativeIcon.X,
+        thirdAlternativeIcon.Y,
+        thirdAlternativeIcon.W,
+        thirdAlternativeIcon.H
+      ) ||
+      isMouseOver(
+        fourthAlternativeIcon.X,
+        fourthAlternativeIcon.Y,
+        fourthAlternativeIcon.W,
+        fourthAlternativeIcon.H
+      ) ||
+      isMouseOver(
+        fifithAlternativeIcon.X,
+        fifithAlternativeIcon.Y,
+        fifithAlternativeIcon.W,
+        fifithAlternativeIcon.H
+      )
+    ) {
+      cursor(HAND);
+    }
+    fill(255);
+    textSize(60);
+    text('Qual a cor resultante?', 300, 150);
 
-    strokeWeight(2);
-    fill(color(colors.ORANGE.hexCode));
-    rect(
-      firstAlternativeIcon.X,
-      firstAlternativeIcon.Y,
-      firstAlternativeIcon.W,
-      firstAlternativeIcon.H,
-      firstAlternativeIcon.R
-    );
+    textSize(150);
+    text('+', 300, 320);
 
-    const secondColorCacheKey = `${stagesEnum.FIRST}-secondAlternativeIcon`;
+    textSize(30);
+    text('Alternativas:', 130, 410);
 
-    if (!sessionStorage.getItem(secondColorCacheKey)) {
-      sessionStorage.setItem(
-        secondColorCacheKey,
-        generateRandomHexCode(colors.ORANGE.hexCode)
+    stroke(255, 255, 255);
+    strokeWeight(4);
+    if (currentStage === stagesEnum.FIRST) {
+      fill(color(colors.RED.hexCode));
+      rect(
+        firstColorIcon.X,
+        firstColorIcon.Y,
+        firstColorIcon.W,
+        firstColorIcon.H,
+        firstColorIcon.R
+      );
+
+      fill(color(colors.YELLOW.hexCode));
+      rect(
+        secondColorIcon.X,
+        secondColorIcon.Y,
+        secondColorIcon.W,
+        secondColorIcon.H,
+        secondColorIcon.R
+      );
+
+      strokeWeight(2);
+      fill(color(colors.ORANGE.hexCode));
+      rect(
+        firstAlternativeIcon.X,
+        firstAlternativeIcon.Y,
+        firstAlternativeIcon.W,
+        firstAlternativeIcon.H,
+        firstAlternativeIcon.R
+      );
+
+      const secondColorCacheKey = `${stagesEnum.FIRST}-secondAlternativeIcon`;
+
+      if (!sessionStorage.getItem(secondColorCacheKey)) {
+        sessionStorage.setItem(
+          secondColorCacheKey,
+          generateRandomHexCode(colors.ORANGE.hexCode)
+        );
+      }
+      fill(color(sessionStorage.getItem(secondColorCacheKey)));
+      rect(
+        secondAlternativeIcon.X,
+        secondAlternativeIcon.Y,
+        secondAlternativeIcon.W,
+        secondAlternativeIcon.H,
+        secondAlternativeIcon.R
+      );
+
+      const thirdColorCacheKey = `${stagesEnum.FIRST}-thirdAlternativeIcon`;
+
+      if (!sessionStorage.getItem(thirdColorCacheKey)) {
+        sessionStorage.setItem(
+          thirdColorCacheKey,
+          generateRandomHexCode(colors.ORANGE.hexCode)
+        );
+      }
+      fill(color(sessionStorage.getItem(thirdColorCacheKey)));
+      rect(
+        thirdAlternativeIcon.X,
+        thirdAlternativeIcon.Y,
+        thirdAlternativeIcon.W,
+        thirdAlternativeIcon.H,
+        thirdAlternativeIcon.R
+      );
+
+      const fourthColorCacheKey = `${stagesEnum.FIRST}-fourthAlternativeIcon`;
+
+      if (!sessionStorage.getItem(fourthColorCacheKey)) {
+        sessionStorage.setItem(
+          fourthColorCacheKey,
+          generateRandomHexCode(colors.ORANGE.hexCode)
+        );
+      }
+      fill(color(sessionStorage.getItem(fourthColorCacheKey)));
+      rect(
+        fourthAlternativeIcon.X,
+        fourthAlternativeIcon.Y,
+        fourthAlternativeIcon.W,
+        fourthAlternativeIcon.H,
+        fourthAlternativeIcon.R
+      );
+
+      const fifithColorCacheKey = `${stagesEnum.FIRST}-fifithAlternativeIcon`;
+
+      if (!sessionStorage.getItem(fifithColorCacheKey)) {
+        sessionStorage.setItem(
+          fifithColorCacheKey,
+          generateRandomHexCode(colors.ORANGE.hexCode)
+        );
+      }
+      fill(color(sessionStorage.getItem(fifithColorCacheKey)));
+      rect(
+        fifithAlternativeIcon.X,
+        fifithAlternativeIcon.Y,
+        fifithAlternativeIcon.W,
+        fifithAlternativeIcon.H,
+        fifithAlternativeIcon.R
       );
     }
-    fill(color(sessionStorage.getItem(secondColorCacheKey)));
-    rect(
-      secondAlternativeIcon.X,
-      secondAlternativeIcon.Y,
-      secondAlternativeIcon.W,
-      secondAlternativeIcon.H,
-      secondAlternativeIcon.R
-    );
 
-    const thirdColorCacheKey = `${stagesEnum.FIRST}-thirdAlternativeIcon`;
+    if (currentStage === stagesEnum.SECOND) {
+      fill(color(colors.GREEN.hexCode));
+      rect(
+        firstColorIcon.X,
+        firstColorIcon.Y,
+        firstColorIcon.W,
+        firstColorIcon.H,
+        firstColorIcon.R
+      );
 
-    if (!sessionStorage.getItem(thirdColorCacheKey)) {
-      sessionStorage.setItem(
-        thirdColorCacheKey,
-        generateRandomHexCode(colors.ORANGE.hexCode)
+      fill(color(colors.BLUE.hexCode));
+      rect(
+        secondColorIcon.X,
+        secondColorIcon.Y,
+        secondColorIcon.W,
+        secondColorIcon.H,
+        secondColorIcon.R
+      );
+
+      strokeWeight(2);
+      fill(color(colors.TEAL.hexCode));
+      rect(
+        firstAlternativeIcon.X,
+        firstAlternativeIcon.Y,
+        firstAlternativeIcon.W,
+        firstAlternativeIcon.H,
+        firstAlternativeIcon.R
+      );
+
+      const secondColorCacheKey = `${stagesEnum.SECOND}-secondAlternativeIcon`;
+
+      if (!sessionStorage.getItem(secondColorCacheKey)) {
+        sessionStorage.setItem(
+          secondColorCacheKey,
+          generateRandomHexCode(colors.TEAL.hexCode)
+        );
+      }
+      fill(color(sessionStorage.getItem(secondColorCacheKey)));
+      rect(
+        secondAlternativeIcon.X,
+        secondAlternativeIcon.Y,
+        secondAlternativeIcon.W,
+        secondAlternativeIcon.H,
+        secondAlternativeIcon.R
+      );
+
+      const thirdColorCacheKey = `${stagesEnum.SECOND}-thirdAlternativeIcon`;
+
+      if (!sessionStorage.getItem(thirdColorCacheKey)) {
+        sessionStorage.setItem(
+          thirdColorCacheKey,
+          generateRandomHexCode(colors.TEAL.hexCode)
+        );
+      }
+      fill(color(sessionStorage.getItem(thirdColorCacheKey)));
+      rect(
+        thirdAlternativeIcon.X,
+        thirdAlternativeIcon.Y,
+        thirdAlternativeIcon.W,
+        thirdAlternativeIcon.H,
+        thirdAlternativeIcon.R
+      );
+
+      const fourthColorCacheKey = `${stagesEnum.SECOND}-fourthAlternativeIcon`;
+
+      if (!sessionStorage.getItem(fourthColorCacheKey)) {
+        sessionStorage.setItem(
+          fourthColorCacheKey,
+          generateRandomHexCode(colors.TEAL.hexCode)
+        );
+      }
+      fill(color(sessionStorage.getItem(fourthColorCacheKey)));
+      rect(
+        fourthAlternativeIcon.X,
+        fourthAlternativeIcon.Y,
+        fourthAlternativeIcon.W,
+        fourthAlternativeIcon.H,
+        fourthAlternativeIcon.R
+      );
+
+      const fifithColorCacheKey = `${stagesEnum.SECOND}-fifithAlternativeIcon`;
+
+      if (!sessionStorage.getItem(fifithColorCacheKey)) {
+        sessionStorage.setItem(
+          fifithColorCacheKey,
+          generateRandomHexCode(colors.TEAL.hexCode)
+        );
+      }
+      fill(color(sessionStorage.getItem(fifithColorCacheKey)));
+      rect(
+        fifithAlternativeIcon.X,
+        fifithAlternativeIcon.Y,
+        fifithAlternativeIcon.W,
+        fifithAlternativeIcon.H,
+        fifithAlternativeIcon.R
       );
     }
-    fill(color(sessionStorage.getItem(thirdColorCacheKey)));
-    rect(
-      thirdAlternativeIcon.X,
-      thirdAlternativeIcon.Y,
-      thirdAlternativeIcon.W,
-      thirdAlternativeIcon.H,
-      thirdAlternativeIcon.R
-    );
 
-    const fourthColorCacheKey = `${stagesEnum.FIRST}-fourthAlternativeIcon`;
+    if (currentStage === stagesEnum.THIRD) {
+      fill(color(colors.ORANGE.hexCode));
+      rect(
+        firstColorIcon.X,
+        firstColorIcon.Y,
+        firstColorIcon.W,
+        firstColorIcon.H,
+        firstColorIcon.R
+      );
 
-    if (!sessionStorage.getItem(fourthColorCacheKey)) {
-      sessionStorage.setItem(
-        fourthColorCacheKey,
-        generateRandomHexCode(colors.ORANGE.hexCode)
+      fill(color(colors.TEAL.hexCode));
+      rect(
+        secondColorIcon.X,
+        secondColorIcon.Y,
+        secondColorIcon.W,
+        secondColorIcon.H,
+        secondColorIcon.R
+      );
+
+      strokeWeight(2);
+      fill(color(colors.OLIVE_DRAB.hexCode));
+      rect(
+        firstAlternativeIcon.X,
+        firstAlternativeIcon.Y,
+        firstAlternativeIcon.W,
+        firstAlternativeIcon.H,
+        firstAlternativeIcon.R
+      );
+
+      const secondColorCacheKey = `${stagesEnum.THIRD}-secondAlternativeIcon`;
+
+      if (!sessionStorage.getItem(secondColorCacheKey)) {
+        sessionStorage.setItem(
+          secondColorCacheKey,
+          generateRandomHexCode(colors.OLIVE_DRAB.hexCode)
+        );
+      }
+      fill(color(sessionStorage.getItem(secondColorCacheKey)));
+      rect(
+        secondAlternativeIcon.X,
+        secondAlternativeIcon.Y,
+        secondAlternativeIcon.W,
+        secondAlternativeIcon.H,
+        secondAlternativeIcon.R
+      );
+
+      const thirdColorCacheKey = `${stagesEnum.THIRD}-thirdAlternativeIcon`;
+
+      if (!sessionStorage.getItem(thirdColorCacheKey)) {
+        sessionStorage.setItem(
+          thirdColorCacheKey,
+          generateRandomHexCode(colors.OLIVE_DRAB.hexCode)
+        );
+      }
+      fill(color(sessionStorage.getItem(thirdColorCacheKey)));
+      rect(
+        thirdAlternativeIcon.X,
+        thirdAlternativeIcon.Y,
+        thirdAlternativeIcon.W,
+        thirdAlternativeIcon.H,
+        thirdAlternativeIcon.R
+      );
+
+      const fourthColorCacheKey = `${stagesEnum.THIRD}-fourthAlternativeIcon`;
+
+      if (!sessionStorage.getItem(fourthColorCacheKey)) {
+        sessionStorage.setItem(
+          fourthColorCacheKey,
+          generateRandomHexCode(colors.OLIVE_DRAB.hexCode)
+        );
+      }
+      fill(color(sessionStorage.getItem(fourthColorCacheKey)));
+      rect(
+        fourthAlternativeIcon.X,
+        fourthAlternativeIcon.Y,
+        fourthAlternativeIcon.W,
+        fourthAlternativeIcon.H,
+        fourthAlternativeIcon.R
+      );
+
+      const fifithColorCacheKey = `${stagesEnum.THIRD}-fifithAlternativeIcon`;
+
+      if (!sessionStorage.getItem(fifithColorCacheKey)) {
+        sessionStorage.setItem(
+          fifithColorCacheKey,
+          generateRandomHexCode(colors.OLIVE_DRAB.hexCode)
+        );
+      }
+      fill(color(sessionStorage.getItem(fifithColorCacheKey)));
+      rect(
+        fifithAlternativeIcon.X,
+        fifithAlternativeIcon.Y,
+        fifithAlternativeIcon.W,
+        fifithAlternativeIcon.H,
+        fifithAlternativeIcon.R
       );
     }
-    fill(color(sessionStorage.getItem(fourthColorCacheKey)));
-    rect(
-      fourthAlternativeIcon.X,
-      fourthAlternativeIcon.Y,
-      fourthAlternativeIcon.W,
-      fourthAlternativeIcon.H,
-      fourthAlternativeIcon.R
-    );
 
-    const fifithColorCacheKey = `${stagesEnum.FIRST}-fifithAlternativeIcon`;
+    if (currentStage === stagesEnum.FOURTH) {
+      fill(color(colors.RED.hexCode));
+      rect(
+        firstColorIcon.X,
+        firstColorIcon.Y,
+        firstColorIcon.W,
+        firstColorIcon.H,
+        firstColorIcon.R
+      );
 
-    if (!sessionStorage.getItem(fifithColorCacheKey)) {
-      sessionStorage.setItem(
-        fifithColorCacheKey,
-        generateRandomHexCode(colors.ORANGE.hexCode)
+      fill(color(colors.BLUE.hexCode));
+      rect(
+        secondColorIcon.X,
+        secondColorIcon.Y,
+        secondColorIcon.W,
+        secondColorIcon.H,
+        secondColorIcon.R
+      );
+
+      strokeWeight(2);
+      fill(color(colors.PURPLE.hexCode));
+      rect(
+        firstAlternativeIcon.X,
+        firstAlternativeIcon.Y,
+        firstAlternativeIcon.W,
+        firstAlternativeIcon.H,
+        firstAlternativeIcon.R
+      );
+
+      const secondColorCacheKey = `${stagesEnum.FOURTH}-secondAlternativeIcon`;
+
+      if (!sessionStorage.getItem(secondColorCacheKey)) {
+        sessionStorage.setItem(
+          secondColorCacheKey,
+          generateRandomHexCode(colors.PURPLE.hexCode)
+        );
+      }
+      fill(color(sessionStorage.getItem(secondColorCacheKey)));
+      rect(
+        secondAlternativeIcon.X,
+        secondAlternativeIcon.Y,
+        secondAlternativeIcon.W,
+        secondAlternativeIcon.H,
+        secondAlternativeIcon.R
+      );
+
+      const thirdColorCacheKey = `${stagesEnum.FOURTH}-thirdAlternativeIcon`;
+
+      if (!sessionStorage.getItem(thirdColorCacheKey)) {
+        sessionStorage.setItem(
+          thirdColorCacheKey,
+          generateRandomHexCode(colors.PURPLE.hexCode)
+        );
+      }
+      fill(color(sessionStorage.getItem(thirdColorCacheKey)));
+      rect(
+        thirdAlternativeIcon.X,
+        thirdAlternativeIcon.Y,
+        thirdAlternativeIcon.W,
+        thirdAlternativeIcon.H,
+        thirdAlternativeIcon.R
+      );
+
+      const fourthColorCacheKey = `${stagesEnum.FOURTH}-fourthAlternativeIcon`;
+
+      if (!sessionStorage.getItem(fourthColorCacheKey)) {
+        sessionStorage.setItem(
+          fourthColorCacheKey,
+          generateRandomHexCode(colors.PURPLE.hexCode)
+        );
+      }
+      fill(color(sessionStorage.getItem(fourthColorCacheKey)));
+      rect(
+        fourthAlternativeIcon.X,
+        fourthAlternativeIcon.Y,
+        fourthAlternativeIcon.W,
+        fourthAlternativeIcon.H,
+        fourthAlternativeIcon.R
+      );
+
+      const fifithColorCacheKey = `${stagesEnum.FOURTH}-fifithAlternativeIcon`;
+
+      if (!sessionStorage.getItem(fifithColorCacheKey)) {
+        sessionStorage.setItem(
+          fifithColorCacheKey,
+          generateRandomHexCode(colors.PURPLE.hexCode)
+        );
+      }
+      fill(color(sessionStorage.getItem(fifithColorCacheKey)));
+      rect(
+        fifithAlternativeIcon.X,
+        fifithAlternativeIcon.Y,
+        fifithAlternativeIcon.W,
+        fifithAlternativeIcon.H,
+        fifithAlternativeIcon.R
       );
     }
-    fill(color(sessionStorage.getItem(fifithColorCacheKey)));
-    rect(
-      fifithAlternativeIcon.X,
-      fifithAlternativeIcon.Y,
-      fifithAlternativeIcon.W,
-      fifithAlternativeIcon.H,
-      fifithAlternativeIcon.R
-    );
-  }
-
-  if (currentStage === stagesEnum.SECOND) {
-    fill(color(colors.GREEN.hexCode));
-    rect(
-      firstColorIcon.X,
-      firstColorIcon.Y,
-      firstColorIcon.W,
-      firstColorIcon.H,
-      firstColorIcon.R
-    );
-
-    fill(color(colors.BLUE.hexCode));
-    rect(
-      secondColorIcon.X,
-      secondColorIcon.Y,
-      secondColorIcon.W,
-      secondColorIcon.H,
-      secondColorIcon.R
-    );
-
-    strokeWeight(2);
-    fill(color(colors.TEAL.hexCode));
-    rect(
-      firstAlternativeIcon.X,
-      firstAlternativeIcon.Y,
-      firstAlternativeIcon.W,
-      firstAlternativeIcon.H,
-      firstAlternativeIcon.R
-    );
-
-    const secondColorCacheKey = `${stagesEnum.SECOND}-secondAlternativeIcon`;
-
-    if (!sessionStorage.getItem(secondColorCacheKey)) {
-      sessionStorage.setItem(
-        secondColorCacheKey,
-        generateRandomHexCode(colors.TEAL.hexCode)
-      );
-    }
-    fill(color(sessionStorage.getItem(secondColorCacheKey)));
-    rect(
-      secondAlternativeIcon.X,
-      secondAlternativeIcon.Y,
-      secondAlternativeIcon.W,
-      secondAlternativeIcon.H,
-      secondAlternativeIcon.R
-    );
-
-    const thirdColorCacheKey = `${stagesEnum.SECOND}-thirdAlternativeIcon`;
-
-    if (!sessionStorage.getItem(thirdColorCacheKey)) {
-      sessionStorage.setItem(
-        thirdColorCacheKey,
-        generateRandomHexCode(colors.TEAL.hexCode)
-      );
-    }
-    fill(color(sessionStorage.getItem(thirdColorCacheKey)));
-    rect(
-      thirdAlternativeIcon.X,
-      thirdAlternativeIcon.Y,
-      thirdAlternativeIcon.W,
-      thirdAlternativeIcon.H,
-      thirdAlternativeIcon.R
-    );
-
-    const fourthColorCacheKey = `${stagesEnum.SECOND}-fourthAlternativeIcon`;
-
-    if (!sessionStorage.getItem(fourthColorCacheKey)) {
-      sessionStorage.setItem(
-        fourthColorCacheKey,
-        generateRandomHexCode(colors.TEAL.hexCode)
-      );
-    }
-    fill(color(sessionStorage.getItem(fourthColorCacheKey)));
-    rect(
-      fourthAlternativeIcon.X,
-      fourthAlternativeIcon.Y,
-      fourthAlternativeIcon.W,
-      fourthAlternativeIcon.H,
-      fourthAlternativeIcon.R
-    );
-
-    const fifithColorCacheKey = `${stagesEnum.SECOND}-fifithAlternativeIcon`;
-
-    if (!sessionStorage.getItem(fifithColorCacheKey)) {
-      sessionStorage.setItem(
-        fifithColorCacheKey,
-        generateRandomHexCode(colors.TEAL.hexCode)
-      );
-    }
-    fill(color(sessionStorage.getItem(fifithColorCacheKey)));
-    rect(
-      fifithAlternativeIcon.X,
-      fifithAlternativeIcon.Y,
-      fifithAlternativeIcon.W,
-      fifithAlternativeIcon.H,
-      fifithAlternativeIcon.R
-    );
-  }
-
-  if (currentStage === stagesEnum.THIRD) {
-    fill(color(colors.ORANGE.hexCode));
-    rect(
-      firstColorIcon.X,
-      firstColorIcon.Y,
-      firstColorIcon.W,
-      firstColorIcon.H,
-      firstColorIcon.R
-    );
-
-    fill(color(colors.TEAL.hexCode));
-    rect(
-      secondColorIcon.X,
-      secondColorIcon.Y,
-      secondColorIcon.W,
-      secondColorIcon.H,
-      secondColorIcon.R
-    );
-
-    strokeWeight(2);
-    fill(color(colors.OLIVE_DRAB.hexCode));
-    rect(
-      firstAlternativeIcon.X,
-      firstAlternativeIcon.Y,
-      firstAlternativeIcon.W,
-      firstAlternativeIcon.H,
-      firstAlternativeIcon.R
-    );
-
-    const secondColorCacheKey = `${stagesEnum.THIRD}-secondAlternativeIcon`;
-
-    if (!sessionStorage.getItem(secondColorCacheKey)) {
-      sessionStorage.setItem(
-        secondColorCacheKey,
-        generateRandomHexCode(colors.OLIVE_DRAB.hexCode)
-      );
-    }
-    fill(color(sessionStorage.getItem(secondColorCacheKey)));
-    rect(
-      secondAlternativeIcon.X,
-      secondAlternativeIcon.Y,
-      secondAlternativeIcon.W,
-      secondAlternativeIcon.H,
-      secondAlternativeIcon.R
-    );
-
-    const thirdColorCacheKey = `${stagesEnum.THIRD}-thirdAlternativeIcon`;
-
-    if (!sessionStorage.getItem(thirdColorCacheKey)) {
-      sessionStorage.setItem(
-        thirdColorCacheKey,
-        generateRandomHexCode(colors.OLIVE_DRAB.hexCode)
-      );
-    }
-    fill(color(sessionStorage.getItem(thirdColorCacheKey)));
-    rect(
-      thirdAlternativeIcon.X,
-      thirdAlternativeIcon.Y,
-      thirdAlternativeIcon.W,
-      thirdAlternativeIcon.H,
-      thirdAlternativeIcon.R
-    );
-
-    const fourthColorCacheKey = `${stagesEnum.THIRD}-fourthAlternativeIcon`;
-
-    if (!sessionStorage.getItem(fourthColorCacheKey)) {
-      sessionStorage.setItem(
-        fourthColorCacheKey,
-        generateRandomHexCode(colors.OLIVE_DRAB.hexCode)
-      );
-    }
-    fill(color(sessionStorage.getItem(fourthColorCacheKey)));
-    rect(
-      fourthAlternativeIcon.X,
-      fourthAlternativeIcon.Y,
-      fourthAlternativeIcon.W,
-      fourthAlternativeIcon.H,
-      fourthAlternativeIcon.R
-    );
-
-    const fifithColorCacheKey = `${stagesEnum.THIRD}-fifithAlternativeIcon`;
-
-    if (!sessionStorage.getItem(fifithColorCacheKey)) {
-      sessionStorage.setItem(
-        fifithColorCacheKey,
-        generateRandomHexCode(colors.OLIVE_DRAB.hexCode)
-      );
-    }
-    fill(color(sessionStorage.getItem(fifithColorCacheKey)));
-    rect(
-      fifithAlternativeIcon.X,
-      fifithAlternativeIcon.Y,
-      fifithAlternativeIcon.W,
-      fifithAlternativeIcon.H,
-      fifithAlternativeIcon.R
-    );
   }
 }
 
 function setup() {
   sessionStorage.clear();
+  currentPanel = panelEnum.MENU;
   firstAlternativeIcon.X = sortElementWithUniquePrevious();
   secondAlternativeIcon.X = sortElementWithUniquePrevious();
   thirdAlternativeIcon.X = sortElementWithUniquePrevious();
@@ -792,6 +935,41 @@ function mouseClicked() {
     }
   }
 
+  if (currentPanel === panelEnum.INICIO && currentStage === stagesEnum.LEVELS) {
+    //Detectando clique sobre botão de iniciar
+    if (
+      mouseX >= btnIniciar.X &&
+      mouseX <= btnIniciar.X + btnIniciar.W &&
+      mouseY >= btnIniciar.Y &&
+      mouseY <= btnIniciar.Y + btnIniciar.H
+    ) {
+      retries = 3;
+      currentStage = stagesEnum.FIRST;
+    }
+
+    //Detectando clique sobre botão de instruções
+    if (
+      mouseX >= btnInstr.X &&
+      mouseX <= btnInstr.X + btnInstr.W &&
+      mouseY >= btnInstr.Y &&
+      mouseY <= btnInstr.Y + btnInstr.H
+    ) {
+      retries = 2;
+      currentStage = stagesEnum.FIRST;
+    }
+
+    //Detectando clique sobre botão de creditos
+    if (
+      mouseX >= btnCredt.X &&
+      mouseX <= btnCredt.X + btnCredt.W &&
+      mouseY >= btnCredt.Y &&
+      mouseY <= btnCredt.Y + btnCredt.H
+    ) {
+      retries = 1;
+      currentStage = stagesEnum.FIRST;
+    }
+  }
+
   if (currentPanel === panelEnum.INICIO) {
     // if(currentStage === stagesEnum.FIRST) {
     if (
@@ -800,7 +978,7 @@ function mouseClicked() {
       mouseY >= firstAlternativeIcon.Y &&
       mouseY <= firstAlternativeIcon.Y + firstAlternativeIcon.H
     ) {
-      currentStage = currentStage+1;
+      currentStage = currentStage + 1;
     }
 
     if (
