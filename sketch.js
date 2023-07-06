@@ -12,7 +12,7 @@ const stagesEnum = {
   SECOND: 2,
   THIRD: 3,
   FOURTH: 4,
-  END: 5
+  END: 5,
 };
 
 //Controls
@@ -739,6 +739,16 @@ function drawStartScreen() {
   }
 }
 
+function drawInstrScreen() {
+  fill(255);
+  text('Tela de Instrucoes', 300, 300);
+}
+
+function drawCredtScreen() {
+  fill(255);
+  text('Tela de Creditos', 300, 300);
+}
+
 function setup() {
   sessionStorage.clear();
   currentPanel = panelEnum.MENU;
@@ -810,17 +820,11 @@ function draw() {
   }
 
   if (currentPanel === panelEnum.INSTR) {
-    // clear();
-    background(220);
-    fill(255);
-    text('Tela de Instrucoes', 300, 300);
+    drawInstrScreen();
   }
 
   if (currentPanel === panelEnum.CREDT) {
-    // clear();
-    background(220);
-    fill(255);
-    text('Tela de Creditos', 300, 300);
+    drawCredtScreen();
   }
 }
 
