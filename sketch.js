@@ -727,15 +727,82 @@ function drawStartScreen() {
     }
 
     if (currentStage === stagesEnum.END) {
+      cursor(ARROW);
+      if (
+        isMouseOver(btnInstr.X, btnInstr.Y, btnInstr.W, btnInstr.H) ||
+        isMouseOver(btnCredt.X, btnCredt.Y, btnCredt.W, btnCredt.H)
+      ) {
+        cursor(HAND);
+      }
+
       background(0, 255, 0);
       textSize(120);
       text('Vencendor', 300, 320);
+
+      fill(255, 255, 255);
+      stroke(95, 158, 160);
+      strokeWeight(2);
+      rect(
+        btnInstr.X,
+        btnInstr.Y,
+        btnInstr.W,
+        btnInstr.H,
+        menuBtnsCornerRadius
+      );
+      fill(95, 158, 160);
+      textSize(30);
+      noStroke();
+      text('Jogar novamente', btnInstr.textX, btnInstr.textY);
+
+      fill(255, 255, 255);
+      stroke(95, 158, 160);
+      strokeWeight(2);
+      rect(
+        btnCredt.X,
+        btnCredt.Y,
+        btnCredt.W,
+        btnCredt.H,
+        menuBtnsCornerRadius
+      );
+      fill(95, 158, 160);
+      textSize(30);
+
+      noStroke();
+      text('Menu', btnCredt.textX, btnCredt.textY);
     }
   } else {
+    cursor(ARROW);
+    if (
+      isMouseOver(btnInstr.X, btnInstr.Y, btnInstr.W, btnInstr.H) ||
+      isMouseOver(btnCredt.X, btnCredt.Y, btnCredt.W, btnCredt.H)
+    ) {
+      cursor(HAND);
+    }
+
     song.stop();
     background(255, 0, 0);
     textSize(120);
     text('Game Over', 300, 320);
+
+    fill(255, 255, 255);
+    stroke(95, 158, 160);
+    strokeWeight(2);
+    rect(btnInstr.X, btnInstr.Y, btnInstr.W, btnInstr.H, menuBtnsCornerRadius);
+    fill(95, 158, 160);
+    textSize(30);
+
+    noStroke();
+    text('Tentar novamente', btnInstr.textX, btnInstr.textY);
+
+    fill(255, 255, 255);
+    stroke(95, 158, 160);
+    strokeWeight(2);
+    rect(btnCredt.X, btnCredt.Y, btnCredt.W, btnCredt.H, menuBtnsCornerRadius);
+    fill(95, 158, 160);
+    textSize(30);
+
+    noStroke();
+    text('Menu', btnCredt.textX, btnCredt.textY);
   }
 }
 
@@ -957,43 +1024,66 @@ function mouseClicked() {
     }
   }
 
-  if (currentPanel === panelEnum.INICIO && currentStage === stagesEnum.LEVELS) {
-    //Detectando clique sobre botão de iniciar
-    if (
-      mouseX >= btnIniciar.X &&
-      mouseX <= btnIniciar.X + btnIniciar.W &&
-      mouseY >= btnIniciar.Y &&
-      mouseY <= btnIniciar.Y + btnIniciar.H
-    ) {
-      retries = 3;
-      currentStage = stagesEnum.FIRST;
-    }
-
-    //Detectando clique sobre botão de instruções
-    if (
-      mouseX >= btnInstr.X &&
-      mouseX <= btnInstr.X + btnInstr.W &&
-      mouseY >= btnInstr.Y &&
-      mouseY <= btnInstr.Y + btnInstr.H
-    ) {
-      retries = 2;
-      currentStage = stagesEnum.FIRST;
-    }
-
-    //Detectando clique sobre botão de creditos
-    if (
-      mouseX >= btnCredt.X &&
-      mouseX <= btnCredt.X + btnCredt.W &&
-      mouseY >= btnCredt.Y &&
-      mouseY <= btnCredt.Y + btnCredt.H
-    ) {
-      retries = 1;
-      currentStage = stagesEnum.FIRST;
-    }
-  }
-
   if (currentPanel === panelEnum.INICIO) {
-    // if(currentStage === stagesEnum.FIRST) {
+    if (currentStage === stagesEnum.LEVELS) {
+      //Detectando clique sobre botão de iniciar
+      if (
+        mouseX >= btnIniciar.X &&
+        mouseX <= btnIniciar.X + btnIniciar.W &&
+        mouseY >= btnIniciar.Y &&
+        mouseY <= btnIniciar.Y + btnIniciar.H
+      ) {
+        retries = 3;
+        currentStage = stagesEnum.FIRST;
+      }
+
+      //Detectando clique sobre botão de instruções
+      if (
+        mouseX >= btnInstr.X &&
+        mouseX <= btnInstr.X + btnInstr.W &&
+        mouseY >= btnInstr.Y &&
+        mouseY <= btnInstr.Y + btnInstr.H
+      ) {
+        retries = 2;
+        currentStage = stagesEnum.FIRST;
+      }
+
+      //Detectando clique sobre botão de creditos
+      if (
+        mouseX >= btnCredt.X &&
+        mouseX <= btnCredt.X + btnCredt.W &&
+        mouseY >= btnCredt.Y &&
+        mouseY <= btnCredt.Y + btnCredt.H
+      ) {
+        retries = 1;
+        currentStage = stagesEnum.FIRST;
+      }
+    }
+
+    if (currentStage === stagesEnum.END || retries <= 0) {
+      if (
+        mouseX >= btnInstr.X &&
+        mouseX <= btnInstr.X + btnInstr.W &&
+        mouseY >= btnInstr.Y &&
+        mouseY <= btnInstr.Y + btnInstr.H
+      ) {
+        retries = undefined;
+        currentStage = stagesEnum.LEVELS;
+      }
+
+      //Detectando clique sobre botão de creditos
+      if (
+        mouseX >= btnCredt.X &&
+        mouseX <= btnCredt.X + btnCredt.W &&
+        mouseY >= btnCredt.Y &&
+        mouseY <= btnCredt.Y + btnCredt.H
+      ) {
+        retries = undefined;
+        currentStage = stagesEnum.LEVELS;
+        currentPanel = panelEnum.MENU;
+      }
+    }
+
     if (
       mouseX >= firstAlternativeIcon.X &&
       mouseX <= firstAlternativeIcon.X + firstAlternativeIcon.H &&
