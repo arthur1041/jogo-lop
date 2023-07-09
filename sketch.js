@@ -210,6 +210,9 @@ function preload() {
   pauseIcon = loadImage('files/images/pause.png');
   playIcon = loadImage('files/images/play-buttton.png');
   mainFont = loadFont('files/fonts/BADABB__.TTF');
+  arthur= loadImage('files/images/arthur.jpg');
+  erinaldo= loadImage('files/images/ERINALDO.jpg');
+  idalmis= loadImage('files/images/iDALMIS.jpg');
 }
 
 function drawMenuScreen() {
@@ -808,12 +811,31 @@ function drawStartScreen() {
 
 function drawInstrScreen() {
   fill(255);
-  text('Tela de Instrucoes', 300, 300);
+  text(
+    '- um jogo dedicado a alunos do pre fundamental!' +
+      '\n\n' +
+      '- o jogo consiste em adivinhar a soma das cores.' +
+      '\n\n' +
+      '- a cada nivel de dificuldade, o jogador tera menos chances para acertar!' +
+      '\n\n' +
+      '- se acertar todas as cores, vence o jogo!' +
+      '\n\n' +
+      '- se o jogador errar em todas as chances, resultara em game over!',
+    300,
+    225
+  );
+  textSize(20);
 }
 
 function drawCredtScreen() {
   fill(255);
-  text('Tela de Creditos', 300, 300);
+  text('Arthur cruz: programador', 150, 270);
+  textSize(20);
+  text('erinaldo junior: programador', 450, 270);
+  text('IDALMIS MILIAN: EDUCADORA', 300, 500);
+  image(arthur, 90, 70, 170, 170);
+  image(erinaldo, 390, 70, 130, 170);
+  image(idalmis, 240, 300, 130, 170);
 }
 
 function setup() {
